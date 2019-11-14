@@ -1,5 +1,3 @@
-	gdb /home/user/level2/level2 -ex "set args < <(python -c \"print 'a' * 80\")"
-
 # INSTALL INSTRUCTIONS: save as ~/.gdbinit
 #
 # DESCRIPTION: A user-friendly gdb configuration file, for x86/x86_64 and ARM platforms.
