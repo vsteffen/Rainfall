@@ -1,0 +1,5 @@
+This program have 3 functions : "main", "m" and "n". "m" starts a shell for us and "n " taunts us with "Nope". The main function calls 2 times malloc : the first one is a buffer of 0x40 and the second is used to store "m" address. main use strcpy with av[1] as source and the first malloc as destination and execute "m" with the second allocation. We can exploit this with a buffer overflow on the first allocation to replace the address in the second allocation which is just after the first in the memory.
+
+./level6 `python -c 'print("a" * 72 + "\x54\x84\x04\x08")'`
+
+Flag -> f73dcb7a06f60e3ccc608990b0a046359d42a1a0489ffeefd0d9cb2d7c9cb82d
