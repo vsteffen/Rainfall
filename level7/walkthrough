@@ -1,0 +1,6 @@
+This program has a function "m" which isn't called and prints the buffer (global "c"). This buffer is filled in the main function with the content of ".pass" file thanks to fopen and fgets. Before these calls, it calls 4 times malloc. It uses av[1] and av[2] to strcpy them in the result of malloc. We can exploit this by using a bufferoverflow and replace the address of malloc by the address of puts referenced in the plt. We rewrite the address of puts by the address of "m".
+The payload is:
+
+./level7 `python -c 'print("a" * 20 + "\x28\x99\x04\x08")'` `python -c 'print("\xf4\x84\x04\x08")'`
+
+"m" prints the flag : 5684af5cb4c8679958be4abe6373147ab52d95768e047820bf382e44fa8d8fb9
