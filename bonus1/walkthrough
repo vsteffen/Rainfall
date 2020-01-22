@@ -1,0 +1,14 @@
+We have only one function here, the main function.
+There is a buffer with a size of 0x28 and an int. 
+There is a call to atoi on the firt argument passed to the function stored in the int. If the result of it is more than 9 then the program leaves without doing anyhing.
+Otherwise, if the result is less than 10, there is a call to memcpy, with the buffer, the second argument passed to the program, and the int * 4.
+And after that there is a comparaison with the int and 0x574f4c46 ("FLOW")
+
+So the exploit is to find a number to give to atoi, which will be mutiply by 4 and will be enough to overwrite the int, overflowing the buffer.
+
+So we can use the exploit of atoi like so :
+
+./bonus1 -1073741810 aaaabbbbccccddddeeeeffffgggghhhhiiiijjjjFLOW
+
+And the flag is :
+579bd19263eb8655e4cf7b742d75edf8c38226925d78db8163506f5191825245
