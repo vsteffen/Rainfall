@@ -1,0 +1,13 @@
+This program have only a main function, 2 globals ("auth" and "service") and multiples commands (to type with fgets on stdin). The commands are the following:
+- "auth " : malloc(0x4), store the address in the global "auth", put 0 in and copy the buffer after "auth " command string if there is 0x1e characters.
+- "reset" : calls free on the global "auth"
+- "service" : strdup the string after "service" command and store the address in the gloabl "service". We can copy as many characters as we want and that's we gonna use for the exploit.
+- "login" : if there's something different than 0 at the malloc address of "auth" global + 0x20, start a shell with level9 suid, if this is not the case, display "Password:\n" and do ... nothing.
+
+So, to exploit this program, we simply have to use the command "auth " and "service" just after with enough characters to fill the memory at "auth" + 0x20. Since strdup use malloc and calls it just after "auth", the string address is probably just after "auth" in the memory. We use the command "login" after and bim, bam, boum, we have a shell.
+
+"auth "
+"serviceaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+"login"
+
+The flag is : c542e581c5ba5162a85f767996e3247ed619ef6c6f7b76a59435545dc6259f8a
