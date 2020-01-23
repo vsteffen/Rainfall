@@ -1,0 +1,8 @@
+This program read the file "/home/user/end/.pass" and store it into a buffer ... but we can't read what's inside it.
+However, if the condition 'strcmp(buff, av[1]) == 0' is true, it executes a shell. This previous line 'buff[atoi(av[1])] = 0;' is the key for our condition. We can't put "0" in argv[1] but if we send an empty string to atoi(), it returns the value 0 and the condition is true. So, the payload is simple:
+
+./bonus3 ""
+
+The final flag is 3321b6f81659f9a71c76616f606e4b50189cecfea611393d5d649f75e157353c.
+
+Let's drink some beer now ! 🍺
