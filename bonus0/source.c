@@ -10,20 +10,20 @@ char  *p(char *buff, char *str) {
 }
 
 void pp(char *buff) {
-	char	buff1[0x14];
 	char	buff2[0x14];
-	char    space[4] = " ";
-	
-	p(buff2, " - ");
+	char	buff1[0x14];
+	char    *space = " ";
+
 	p(buff1, " - ");
-	strcpy(buff, buff2);
-	*((char *)(strchr(buff, '\0'))) = space[0];
-	strcat(buff, buff1);
+	p(buff2, " - ");
+	strcpy(buff, buff1);
+	strcpy(strchr(buff, '\0'), space);
+	strcat(buff, buff2);
 }
 
 int main(int ac, char **av) {
 	char buff[0x2a];
-	
+
 	pp(buff);
 	puts(buff);
 	return (0);
